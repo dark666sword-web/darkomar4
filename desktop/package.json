@@ -1,0 +1,19 @@
+{
+  "name": "office-map",
+  "version": "1.0.0",
+  "description": "Office radius map",
+  "author": "Office Map",
+  "main": "main.js",
+  "scripts": { "start": "electron ." },
+  "devDependencies": {
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.officemap.desktop",
+    "productName": "OfficeMap",
+    "files": ["main.js", "server.js", "www/**/*"],
+    "win": { "target": ["portable", "nsis"], "icon": "icon.png" },
+    "nsis": { "oneClick": true, "perMachine": false, "createDesktopShortcut": true }
+  }
+}
