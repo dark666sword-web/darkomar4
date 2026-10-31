@@ -1,0 +1,32 @@
+name: Build Windows
+on:
+  push:
+  workflow_dispatch:
+jobs:
+  win:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Prepare app files
+        working-directory: desktop
+        run: |
+          mkdir -p www
+          cp ../app/src/main/assets/index.html www/index.html
+          curl -fsSL https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js -o www/leaflet.js
+          for f in app auth firestore; do curl -fsSL https://www.gstatic.com/firebasejs/10.12.2/firebase-$f-compat.js -o www/firebase-$f-compat.js; done
+      - name: Install
+        working-directory: desktop
+        run: npm install
+      - name: Build
+        working-directory: desktop
+        run: npx electron-builder --win portable nsis --publish never
+      - uses: actions/upload-artifact@v4
+        with:
+          name: office-map-windows
+          path: desktop/dist/*.exe
